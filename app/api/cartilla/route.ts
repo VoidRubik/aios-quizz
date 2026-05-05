@@ -5,7 +5,7 @@ import { z } from 'zod'
 
 const schema = z.object({
   submissionId: z.string().uuid(),
-  cartilla: z.record(z.string()),
+  cartilla: z.record(z.string(), z.string()),
 })
 
 export async function POST(req: Request) {

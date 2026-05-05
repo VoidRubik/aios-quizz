@@ -55,10 +55,10 @@ export async function GET(req: Request, { params }: { params: Promise<{ token: s
       result,
       cartilla: submission.cartilla_override ?? {},
       coachNote: submission.coach_note ?? '',
-    })
+    }) as any
   )
 
-  return new NextResponse(pdfBuffer as Buffer, {
+  return new NextResponse(new Uint8Array(pdfBuffer), {
     headers: {
       'Content-Type': 'application/pdf',
       'Content-Disposition': `attachment; filename="resultados-${(client.name as string).replace(/\s+/g, '-')}.pdf"`,
