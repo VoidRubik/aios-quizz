@@ -1,0 +1,4 @@
+-- Run: node scripts/seed-db.mjs
+-- Then apply this file via Supabase dashboard SQL editor, or:
+-- psql <connection-string> < supabase/seed.sql
+-- (seed-db.mjs generates and inserts data directly via API)
