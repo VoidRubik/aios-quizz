@@ -1,0 +1,244 @@
+// Run: node scripts/seed-db.mjs
+// Requires .env.local with NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY
+import { createClient } from '@supabase/supabase-js'
+import { config } from 'dotenv'
+config({ path: '.env.local' })
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY,
+)
+
+const PERSONALITY_TYPES = [
+  { slug: 'solitario', name: 'Solitario', cluster: 'racional', defaultCartilla: {} },
+  { slug: 'sensitivo', name: 'Sensitivo', cluster: 'emocional', defaultCartilla: {} },
+  {
+    slug: 'agudo', name: 'Agudo', cluster: 'emocional',
+    defaultCartilla: {
+      polaridad: 'Negativo',
+      glandulaMaestra: 'Tiroides',
+      glandulaSubsidiaria: 'Pituitaria anterior',
+      enfasisGenetico: 'Emocional',
+      dictum: 'Yo gano',
+      anhelo: 'Reconocimiento',
+      pecadoCapital: 'Envidia',
+      virtud: 'Caridad',
+      susceptibilidad: 'Crítica',
+      rasgoDominante: 'Confusión',
+      trabajoARealizar: 'Corrimientos a Estructurado, equilibrio con los énfasis genéticos: Motriz y Racional. Complementos con el resto de tipos del Heptagrama.',
+    },
+  },
+  { slug: 'estructurado', name: 'Estructurado', cluster: 'racional', defaultCartilla: {} },
+  { slug: 'energetico', name: 'Energético', cluster: 'motriz', defaultCartilla: {} },
+  { slug: 'expansivo', name: 'Expansivo', cluster: 'motriz', defaultCartilla: {} },
+  { slug: 'carismatico', name: 'Carismático', cluster: 'universal', defaultCartilla: {} },
+]
+
+const TRAITS_BY_TYPE = {
+  solitario: [
+    'Tienen muy poca energía.',
+    'Son negativos y pesimistas.',
+    'Carecen del deseo de cambiar algo o de la energía para hacerlo o de ambas.',
+    'Cuando tienen un objetivo son persistentes. Pueden ser genios.',
+    'Prácticos, fríos, obsesivos y perfeccionistas.',
+    'Disfrutan la soledad y el silencio más que ningún otro tipo; pero no son tímidos.',
+    'Independientes. Observadores.',
+    'En reuniones tienden a aislarse. Introvertidos. Privados.',
+    'Son distantes e inexpresivos pero de emociones muy profundas y subterráneas.',
+    'Saben escuchar, son pacientes.',
+    'Profesionales de los puntos negros, aunque ellos se consideran «realistas».',
+    'Sienten predilección por lugares apartados, fríos y oscuros.',
+    'Necesitan a quién desobedecer, rechazar o ignorar.',
+    'Tienen pocos amigos pero muy buenos.',
+    'Casi no necesitan la aprobación de los demás.',
+    'Selectivos, sinceros, genuinos y fieles a la causa. Discretos.',
+    'Son de trato difícil por sus emociones inestables.',
+    'Son posesivos y avaros. Acumulativos; coleccionan cosas pequeñas.',
+    'Imaginativos y de temperamento artístico.',
+    'Tienen raro sentido del humor. Son conservadores.',
+    'Suelen vestir de colores oscuros u opacos.',
+    'Son buenos archivistas, bibliotecarios, contadores, financieros, administradores.',
+    'Confiables con números y libros. Excelentes en ocupaciones que requieran precisión y atención minuciosa.',
+  ],
+  sensitivo: [
+    'Son el tipo que genera menos energía. Tienen el metabolismo más lento.',
+    'Son optimistas y positivos.',
+    'No tienen determinación.',
+    'Nunca andan solos. Buscan calor y energía en otras personas.',
+    'Son muy desordenados. Duermen mucho. Son friolentos.',
+    'No pueden discernir ni decidir. Aceptan todo y a todos.',
+    'Menosprecian sus propias opiniones.',
+    'Dan todo sin esperar nada a cambio, más que compañía.',
+    'Son amantes intuitivos, muy sensibles y sensuales.',
+    'Gozan intensamente de la naturaleza.',
+    'Extraordinariamente sensitivos.',
+    'Tienen buena comunicación con plantas, animales y niños.',
+    'No son competitivos, no juzgan.',
+    'Son hogareños. Les gusta dar y recibir masajes.',
+    'Son muy desprendidos de objetos materiales, personas o situaciones.',
+    'Armoniosos, gentiles y cálidos.',
+    'Son pasivos, vegetativos hasta el rasgo de inexistencia.',
+    'Sedentarios: no suelen cambiar de domicilio ni de trabajo.',
+    'Buscan la comodidad y moverse poco para ahorrar energía.',
+    'Sus casas son acogedoras y sus ropas holgadas.',
+    'Buenos artistas y educadores. Enfermeros, trabajadores sociales, decoradores, recepcionistas, diseñadores, fisioterapeutas.',
+    'Excelentes en ocupaciones que requieran contacto humano de manera reposada y armónica.',
+  ],
+  agudo: [
+    'Tienen exceso de energía, difícil de contener en su cuerpo reducido.',
+    'Son muy inquietos y rápidos. Actividad de tipo nervioso.',
+    'Tienen una gran rapidez intelectual. Piensan en zig zag. Son muy agudos.',
+    'Enredados, no dicen las cosas de manera clara y directa.',
+    'Intrigosos, astutos y manipuladores.',
+    'Son buenos para hacer dinero. Emprendedores.',
+    'Se involucran simultáneamente en muchos proyectos que suelen embrollar.',
+    'Buscan ser el centro de atención. Son envidiosos y competitivos: siempre quieren ganar.',
+    'Si se sienten acorralados, se hacen las víctimas. Se justifican, no aceptan sus equivocaciones.',
+    'Divertidos anfitriones. Efectistas para vestirse.',
+    'Necesitan la admiración de los otros, más que ninguno. Son desconfiados y mitómanos.',
+    'No soportan ser ignorados. Tienden a la hipocondría.',
+    'Pecados menores: cleptomanía.',
+    'Estrategas laberínticos: practican el terrorismo intelectual y emocional.',
+    'Tienen gran ingenio verbal y capacidad de persuasión.',
+    'Caprichudos y paranoicos. Se defienden hasta cuando no los atacan.',
+    'Tienen una gran capacidad para gozar la vida. Gran sentido del humor.',
+    'Actúan por interés propio y creen que así son los demás.',
+    'Les gusta conocer las reglas para romperlas.',
+    'Se realizan al encontrar rebajas.',
+    'Muy creativos. Líderes verborreicos: se escuchan cuando hablan.',
+    'Son vendedores natos. Buenos políticos, comediantes, detectives, fiscalistas, imitadores.',
+    'Excelentes en ocupaciones que requieran de gran movilidad y dinamismo, de rapidez tanto física como mental.',
+  ],
+  estructurado: [
+    'Tienen mucha energía pero son pausados, metódicos, tranquilos.',
+    'Son racionales, moderados y objetivos.',
+    'Gran capacidad analítica. Buscan la verdad.',
+    'Excesivamente lógicos, fríos y estructurados. Didácticos hasta la exasperación.',
+    'Para ellos no hay nada trivial. Amplia visión.',
+    'Les gusta acumular datos. Investigan el origen de las cosas.',
+    'Buscan claridad y síntesis en sus vidas. Les fascinan las estadísticas.',
+    'Son soberbios, inflexibles y arrogantes.',
+    'No concretan. Planean en exceso.',
+    'Son perfeccionistas. Sumamente ordenados.',
+    'Son rutinarios, monótonos, predecibles.',
+    'Cuando algo les gusta lo repiten e incorporan a sus vidas.',
+    'Establecen jerarquías. Clasifican a las personas y a las cosas.',
+    'Son pedantes. Poco emotivos. Solemnes.',
+    'Tienen un gran sentido de la justicia.',
+    'Son paternalistas, excesivamente responsables. Incluso suelen asumir responsabilidades ajenas.',
+    'Grandes líderes por convencimiento. Extrovertidos y públicos.',
+    'Les gusta ser libres. Son independientes.',
+    'Amantes del conocimiento.',
+    'Consejeros natos. Creen saber lo que es mejor para ti o para todos.',
+    'Son grandes conciliadores racionales.',
+    'Buenos académicos, científicos, planificadores, escritores, profesores, asesores.',
+    'Excelentes en ocupaciones que requieran planeación analítica, investigación académica y comunicación estructurada.',
+  ],
+  energetico: [
+    'Tienen gran vitalidad. Hiperactivos. Duermen poco.',
+    'Son competitivos, necios, bruscos en ademanes y palabras.',
+    'Son grandes hacedores. En cada proyecto se entregan hasta concretarlo.',
+    'Son líderes impositivos y beligerantes.',
+    'Constantemente buscan la acción que les permita liberar su enorme energía.',
+    'La impaciencia los lleva a no saber delegar. Se precipitan.',
+    'Imparten órdenes a diestra y siniestra. Prefieren que los obedezcan a que los amen.',
+    'Tienen un gran sentido práctico. Buenos estrategas.',
+    'Todo es URGENTE. Lo que les concierne lo exigen para ayer.',
+    'Creen en aquello que se les puede demostrar. Son tercos y escépticos.',
+    'Son fácilmente irritables, agresivos y dominantes.',
+    'Si no encuentran cómo canalizar su energía, se autodestruyen.',
+    'Son leales, nobles y apasionados. Saben perdonar. Solo tienen amigos o enemigos.',
+    'Piden y dan verdades directas y brutalmente. Son MUY celosos.',
+    'Buscan tener retos que vencer. Se fijan metas y van de una en otra.',
+    'Buscan su libertad y les gustan los espacios abiertos.',
+    'El peligro los excita. Viven al filo de la navaja. Son rebeldes, no soportan la autoridad.',
+    'No planean. Van directo a la acción. Son impulsivos.',
+    'Las depresiones pueden encadenarlos a vicios.',
+    'Exagerados. No tienen límites, todo es a lo grande.',
+    'No les gustan las sutilezas. No soportan la traición. Son tímidos.',
+    'Buenos empresarios, políticos, deportistas, militares, comerciantes, organizadores.',
+    'Excelentes en ocupaciones que requieran capacidad de mando, visión práctica y resultados inmediatos.',
+  ],
+  expansivo: [
+    'Tienen poca energía.',
+    'Son dispersos, atolondrados y entusiastas.',
+    'Hacen mil cosas y no concretan ninguna, pero gozan todas.',
+    'Excéntricos, alegres, amigueros, les encantan las fiestas y reuniones.',
+    'Grandes Gourmets: su fascinación es la comida.',
+    'Excelentes anfitriones. Maternales. Apapachones.',
+    'Coleccionan amigos y cosas raras. Sus vestimentas suelen ser estrafalarias.',
+    'Despilfarradores. Muy generosos. Lo dan todo y más.',
+    'Son los que más sufren con el dolor ajeno.',
+    'Sus casas son de puertas abiertas. Hospedan a menesterosos.',
+    'Son populares. Quieren y se dan a querer de inmediato.',
+    'Requieren de la aceptación de los demás para vivir. No soportan el rechazo.',
+    'Compasivos, vanidosos, ególatras, inseguros.',
+    'Castigan con el látigo de su desprecio.',
+    'Optimistas. Se sienten comprometidos a mostrar su felicidad.',
+    'Les encanta conciliar afectivamente.',
+    'Sentimentaloides, manipuladores, prolíficos. Ríen y lloran con facilidad.',
+    'Tienen aptitud para las lenguas.',
+    'Grandes chefs, artistas, locutores, médicos, traductores, diplomáticos, magos de las relaciones públicas.',
+    'Excelentes en ocupaciones que requieran trato social, espíritu de servicio y convivencia entusiasta.',
+  ],
+  carismatico: [
+    'Constituyen el tipo más energético de todo el Heptagrama.',
+    'Tienen el metabolismo más rápido.',
+    'Procesan muchísima energía. Es difícil seguirles el paso.',
+    'Gran magnetismo. Irradian ternura, son muy intensos.',
+    'Tienen polaridad universal. Extraordinaria energía sexual.',
+    'Volátil, ligero, eléctrico y veloz.',
+    'Gesticulan mucho al hablar y danzan al caminar.',
+    'Carismáticos, creativos, idealistas.',
+    'Contagian alegría y buen humor.',
+    'Estimulan los aspectos activos y positivos de los demás tipos.',
+    'Ingenuos, optimistas irracionales, entusiastas.',
+    'Suelen no ver el lado oscuro o negativo de las cosas o las personas.',
+    'Tienen grandes proyectos. Son dispersos.',
+    'Ven el lado positivo en todo. Son muy adaptables.',
+    'Visionarios. No tienen los pies en la tierra.',
+    'Dan lo mejor de sí mismos. Son serviciales.',
+    'Son amigables pero no tienen amigos.',
+    'Viven la vida con intensidad. Pero su entusiasmo y energía pueden destruirlos.',
+    'Son como una centella que se fulmina a sí misma.',
+    'Suelen morir en forma súbita y a temprana edad.',
+    'No son impositivos ni manipuladores. Su liderazgo es por contagio.',
+    'El efecto carismático hace que los tipos pasivos se comporten con la ambición y asertividad de los tipos activos. Y a la inversa: dulcifica y enternece a los tipos activos, los vuelve sensibles y delicados.',
+    'Pueden canalizar su energía hacia la sexualidad o el misticismo con idéntica intensidad.',
+    'Tienen el entusiasmo infantil aunado a ideales trascendentes.',
+    'Se olvidan de sí mismos. Hay que alimentarlos y vestirlos.',
+    'Constituyen el elemento agregado en los demás tipos; aquello que los lleva a evolucionar al tipo subsiguiente.',
+    'Grandes líderes naturales, místicos, show men: cantantes, bailarines, actores, comediantes, comunicadores.',
+    'Excelentes en ocupaciones que requieran trato con multitudes, comunicación intensa y desparpajada animación.',
+  ],
+}
+
+async function seed() {
+  console.log('Seeding personality types and traits...')
+
+  for (const pt of PERSONALITY_TYPES) {
+    const { data: typeRow, error: typeError } = await supabase
+      .from('personality_types')
+      .upsert(
+        { slug: pt.slug, name: pt.name, cluster: pt.cluster, default_cartilla: pt.defaultCartilla },
+        { onConflict: 'slug' }
+      )
+      .select()
+      .single()
+
+    if (typeError) { console.error('Type error:', pt.slug, typeError.message); continue }
+
+    const traits = TRAITS_BY_TYPE[pt.slug] ?? []
+    const { error: traitError } = await supabase.from('traits').upsert(
+      traits.map((text, i) => ({ type_id: typeRow.id, position: i + 1, text })),
+      { onConflict: 'type_id,position' }
+    )
+
+    if (traitError) { console.error('Trait error:', pt.slug, traitError.message); continue }
+    console.log(`Seeded ${pt.name}: ${traits.length} traits`)
+  }
+
+  console.log('Done!')
+}
+
+seed().catch(console.error)
