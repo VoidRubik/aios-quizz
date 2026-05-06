@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Heptagrama — Direcciones de Diseño</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Nunito:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Space+Grotesk:wght@300;400;500;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0e0e0e;
+      color: #f0ede8;
+      font-family: 'Space Grotesk', sans-serif;
+      min-height: 100vh;
+      padding: 3rem 2rem 5rem;
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .page-header h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 300;
+      font-size: 0.75rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: #888;
+      margin-bottom: 1rem;
+    }
+
+    .page-header h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: 2.5rem;
+      color: #f0ede8;
+      letter-spacing: 0.02em;
+    }
+
+    .page-header p {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 300;
+      font-size: 0.85rem;
+      color: #666;
+      margin-top: 0.75rem;
+      letter-spacing: 0.05em;
+    }
+
+    .directions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 2.5rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* ─── CARD SHELL ─── */
+    .direction-card {
+      background: #161616;
+      border: 1px solid #2a2a2a;
+      border-radius: 4px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                  border-color 0.35s ease,
+                  box-shadow 0.35s ease;
+      position: relative;
+    }
+
+    .direction-card:hover {
+      transform: translateY(-6px);
+      border-color: #444;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+    }
+
+    .direction-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+
+    .card-a::before { background: linear-gradient(90deg, #b8965a, #e8c87a, #b8965a); }
+    .card-b::before { background: linear-gradient(90deg, #7a6352, #c4956a, #8b7355); }
+    .card-c::before { background: linear-gradient(90deg, #d64f3c, #ff6b54, #d64f3c); }
+
+    .direction-card:hover::before { opacity: 1; }
+
+    /* ─── MOCKUP AREA ─── */
+    .mockup-frame {
+      height: 320px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* ══════════════════════════════════════════════
+       DIRECTION A — LUXURY / REFINED
+    ══════════════════════════════════════════════ */
+    .mockup-a {
+      background: #f8f4ee;
+      padding: 0;
+      font-family: 'Cormorant Garamond', serif;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .mockup-a .nav-a {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 28px;
+      border-bottom: 1px solid #ddd5c4;
+      background: #f8f4ee;
+    }
+
+    .mockup-a .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: 15px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #2c2420;
+    }
+
+    .mockup-a .nav-step {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      color: #b8965a;
+      text-transform: uppercase;
+    }
+
+    .mockup-a .body-a {
+      flex: 1;
+      padding: 28px 28px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .mockup-a .stage-label {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 8px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: #b8965a;
+    }
+
+    .mockup-a .question-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 400;
+      font-size: 17px;
+      color: #2c2420;
+      line-height: 1.55;
+      font-style: italic;
+    }
+
+    .mockup-a .divider-a {
+      width: 36px;
+      height: 1px;
+      background: #b8965a;
+      opacity: 0.6;
+    }
+
+    .mockup-a .options-a {
+      display: flex;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .mockup-a .opt-btn {
+      padding: 8px 22px;
+      border: 1px solid #c8b990;
+      background: transparent;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #5a4a38;
+      cursor: pointer;
+    }
+
+    .mockup-a .opt-btn.selected {
+      background: #2c2420;
+      border-color: #2c2420;
+      color: #f8f4ee;
+    }
+
+    .mockup-a .progress-bar-a {
+      height: 1px;
+      background: #e0d8cd;
+      margin: 0 28px;
+    }
+
+    .mockup-a .progress-fill-a {
+      width: 35%;
+      height: 100%;
+      background: #b8965a;
+    }
+
+    .mockup-a .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 28px 18px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 8px;
+      color: #b8a080;
+      letter-spacing: 0.1em;
+    }
+
+    .mockup-a .items-a {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .mockup-a .item-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 0;
+      border-bottom: 1px solid #ede6db;
+    }
+
+    .mockup-a .item-check {
+      width: 14px;
+      height: 14px;
+      border: 1px solid #c8b990;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .mockup-a .item-check.checked::after {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: #b8965a;
+      display: block;
+    }
+
+    .mockup-a .item-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 12px;
+      color: #4a3828;
+    }
+
+    /* ══════════════════════════════════════════════
+       DIRECTION B — ORGANIC / WARM
+    ══════════════════════════════════════════════ */
+    .mockup-b {
+      background: #f5efe6;
+      font-family: 'Nunito', sans-serif;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .mockup-b .nav-b {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 24px;
+      background: #f5efe6;
+    }
+
+    .mockup-b .nav-logo-b {
+      font-family: 'Lora', serif;
+      font-weight: 600;
+      font-size: 14px;
+      color: #4a3728;
+      letter-spacing: 0.03em;
+    }
+
+    .mockup-b .nav-badge {
+      background: #e8c9a0;
+      color: #6b4c2e;
+      font-family: 'Nunito', sans-serif;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.05em;
+    }
+
+    .mockup-b .body-b {
+      flex: 1;
+      padding: 16px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .mockup-b .stage-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #e8d5bc;
+      color: #6b4c2e;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+      width: fit-content;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .mockup-b .question-card-b {
+      background: #fff9f3;
+      border-radius: 14px;
+      padding: 16px;
+      border: 1.5px solid #e8d5bc;
+      box-shadow: 0 3px 12px rgba(100,60,20,0.06);
+    }
+
+    .mockup-b .question-text-b {
+      font-family: 'Lora', serif;
+      font-size: 14px;
+      color: #3a2a1e;
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .mockup-b .options-b {
+      display: flex;
+      gap: 8px;
+    }
+
+    .mockup-b .opt-b {
+      flex: 1;
+      padding: 9px 0;
+      border-radius: 10px;
+      border: 1.5px solid #d4b896;
+      background: transparent;
+      font-family: 'Nunito', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      color: #6b4c2e;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .mockup-b .opt-b.yes {
+      background: #7a9e7e;
+      border-color: #7a9e7e;
+      color: #fff;
+    }
+
+    .mockup-b .mini-items-b {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .mockup-b .mini-row-b {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #fff9f3;
+      border-radius: 10px;
+      padding: 8px 12px;
+      border: 1px solid #eddfc9;
+    }
+
+    .mockup-b .dot-b {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #c4956a;
+      flex-shrink: 0;
+    }
+
+    .mockup-b .dot-b.done {
+      background: #7a9e7e;
+    }
+
+    .mockup-b .mini-text-b {
+      font-size: 11px;
+      color: #5a4030;
+      font-family: 'Nunito', sans-serif;
+    }
+
+    .mockup-b .progress-wrap-b {
+      padding: 0 24px 16px;
+    }
+
+    .mockup-b .progress-track-b {
+      height: 6px;
+      background: #e8d5bc;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .mockup-b .progress-fill-b {
+      width: 40%;
+      height: 100%;
+      background: linear-gradient(90deg, #c4956a, #7a9e7e);
+      border-radius: 10px;
+    }
+
+    .mockup-b .progress-label-b {
+      font-size: 9px;
+      color: #9a7a5a;
+      font-weight: 600;
+      margin-top: 5px;
+      letter-spacing: 0.05em;
+    }
+
+    /* ══════════════════════════════════════════════
+       DIRECTION C — EDITORIAL / STRUCTURED
+    ══════════════════════════════════════════════ */
+    .mockup-c {
+      background: #f9f9f7;
+      font-family: 'Space Grotesk', sans-serif;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .mockup-c .nav-c {
+      display: flex;
+      justify-content: space-between;
+      align-items: stretch;
+      border-bottom: 2px solid #1a1a1a;
+      background: #f9f9f7;
+    }
+
+    .mockup-c .nav-logo-c {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #1a1a1a;
+      padding: 14px 20px;
+      border-right: 2px solid #1a1a1a;
+    }
+
+    .mockup-c .nav-meta-c {
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #888;
+    }
+
+    .mockup-c .nav-accent {
+      background: #d64f3c;
+      color: #fff;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-left: auto;
+    }
+
+    .mockup-c .body-c {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+    }
+
+    .mockup-c .sidebar-c {
+      border-right: 2px solid #1a1a1a;
+      padding: 18px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .mockup-c .sidebar-label {
+      font-size: 7px;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #888;
+      margin-bottom: 6px;
+    }
+
+    .mockup-c .stage-item-c {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 8px;
+      font-size: 10px;
+      font-weight: 500;
+      color: #555;
+      letter-spacing: 0.03em;
+    }
+
+    .mockup-c .stage-item-c.active {
+      background: #1a1a1a;
+      color: #f9f9f7;
+    }
+
+    .mockup-c .stage-num {
+      font-size: 8px;
+      font-weight: 700;
+      opacity: 0.5;
+      width: 14px;
+    }
+
+    .mockup-c .main-c {
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .mockup-c .question-num {
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #d64f3c;
+    }
+
+    .mockup-c .question-text-c {
+      font-family: 'Libre Baskerville', serif;
+      font-size: 14px;
+      color: #1a1a1a;
+      line-height: 1.5;
+    }
+
+    .mockup-c .rule-c {
+      height: 2px;
+      background: #1a1a1a;
+      width: 100%;
+    }
+
+    .mockup-c .options-c {
+      display: flex;
+      gap: 0;
+    }
+
+    .mockup-c .opt-c {
+      flex: 1;
+      padding: 10px 0;
+      border: 2px solid #1a1a1a;
+      background: transparent;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #1a1a1a;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .mockup-c .opt-c + .opt-c {
+      border-left: none;
+    }
+
+    .mockup-c .opt-c.yes {
+      background: #1a1a1a;
+      color: #f9f9f7;
+    }
+
+    .mockup-c .mini-rows-c {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .mockup-c .mini-row-c {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 0;
+      border-bottom: 1px solid #e0e0dc;
+      font-size: 10px;
+      color: #444;
+    }
+
+    .mockup-c .mini-row-c .tag-c {
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 2px 6px;
+      background: #d64f3c;
+      color: #fff;
+    }
+
+    .mockup-c .tag-c.done {
+      background: #1a1a1a;
+    }
+
+    /* ─── CARD META AREA ─── */
+    .card-meta {
+      padding: 1.5rem 1.75rem;
+      border-top: 1px solid #252525;
+    }
+
+    .direction-label {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      margin-bottom: 0.35rem;
+    }
+
+    .card-a .direction-label { color: #b8965a; }
+    .card-b .direction-label { color: #c4956a; }
+    .card-c .direction-label { color: #d64f3c; }
+
+    .direction-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 400;
+      font-size: 1.4rem;
+      color: #f0ede8;
+      letter-spacing: 0.02em;
+      margin-bottom: 0.2rem;
+    }
+
+    .direction-tagline {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 300;
+      color: #777;
+      letter-spacing: 0.08em;
+      margin-bottom: 1.25rem;
+    }
+
+    .meta-row {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .meta-group {
+      flex: 1;
+      min-width: 120px;
+    }
+
+    .meta-label {
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #555;
+      margin-bottom: 0.4rem;
+    }
+
+    .font-names {
+      font-size: 0.7rem;
+      color: #999;
+      line-height: 1.6;
+      font-weight: 300;
+    }
+
+    .swatches {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .swatch {
+      width: 22px;
+      height: 22px;
+      border-radius: 3px;
+      border: 1px solid rgba(255,255,255,0.08);
+      position: relative;
+    }
+
+    .swatch::after {
+      content: attr(title);
+      position: absolute;
+      bottom: calc(100% + 6px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: #2a2a2a;
+      color: #f0ede8;
+      font-size: 9px;
+      padding: 3px 6px;
+      border-radius: 2px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    .swatch:hover::after { opacity: 1; }
+
+  </style>
+</head>
+<body>
+
+  <div class="page-header">
+    <h1>Heptagrama — Evaluación de Diseño</h1>
+    <h2>Tres Direcciones Estéticas</h2>
+    <p>Pasa el cursor sobre cada tarjeta · Elige la dirección que mejor represente tu práctica</p>
+  </div>
+
+  <div class="directions-grid">
+
+    <!-- ══════════════════════════════════════════
+         CARD A — LUXURY / REFINED
+    ══════════════════════════════════════════ -->
+    <div class="direction-card card-a">
+      <div class="mockup-frame">
+        <div class="mockup-a">
+
+          <!-- Nav -->
+          <div class="nav-a">
+            <span class="nav-logo">HEPTAGRAMA</span>
+            <span class="nav-step">Etapa 2 de 4 · Adolescencia</span>
+          </div>
+
+          <div class="body-a">
+            <span class="stage-label">Adolescencia — Sección I</span>
+            <p class="question-text">
+              "¿Prefiero analizar una situación antes de actuar, aun cuando el tiempo apremia?"
+            </p>
+            <div class="divider-a"></div>
+
+            <div class="options-a">
+              <button class="opt-btn selected">Sí</button>
+              <button class="opt-btn">No</button>
+            </div>
+
+            <div class="items-a">
+              <div class="item-row">
+                <div class="item-check checked"></div>
+                <span class="item-text">Me incomoda la ambigüedad prolongada</span>
+              </div>
+              <div class="item-row">
+                <div class="item-check"></div>
+                <span class="item-text">Suelo buscar soluciones estructuradas</span>
+              </div>
+              <div class="item-row">
+                <div class="item-check checked"></div>
+                <span class="item-text">Prefiero la precisión a la rapidez</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="progress-bar-a">
+            <div class="progress-fill-a"></div>
+          </div>
+          <div class="progress-meta">
+            <span>18 de 52 preguntas</span>
+            <span>35% completado</span>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="card-meta">
+        <div class="direction-label">Dirección A</div>
+        <div class="direction-name">Lujo Refinado</div>
+        <div class="direction-tagline">Instituto · Confianza · Precisión</div>
+
+        <div class="meta-row">
+          <div class="meta-group">
+            <div class="meta-label">Tipografía</div>
+            <div class="font-names">
+              Cormorant Garamond<br>
+              Space Grotesk
+            </div>
+          </div>
+          <div class="meta-group">
+            <div class="meta-label">Paleta</div>
+            <div class="swatches">
+              <div class="swatch" style="background:#f8f4ee" title="Crema #f8f4ee"></div>
+              <div class="swatch" style="background:#2c2420" title="Carbón #2c2420"></div>
+              <div class="swatch" style="background:#b8965a" title="Oro #b8965a"></div>
+              <div class="swatch" style="background:#e0d8cd" title="Lino #e0d8cd"></div>
+              <div class="swatch" style="background:#5a4a38" title="Tabaco #5a4a38"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         CARD B — ORGANIC / WARM
+    ══════════════════════════════════════════ -->
+    <div class="direction-card card-b">
+      <div class="mockup-frame">
+        <div class="mockup-b">
+
+          <div class="nav-b">
+            <span class="nav-logo-b">Heptagrama</span>
+            <span class="nav-badge">Juventud · 12 / 22</span>
+          </div>
+
+          <div class="body-b">
+            <span class="stage-pill">🌱 Juventud</span>
+
+            <div class="question-card-b">
+              <p class="question-text-b">
+                "¿Sientes que tu energía se renueva en contacto con otras personas?"
+              </p>
+              <div class="options-b">
+                <button class="opt-b yes">Sí</button>
+                <button class="opt-b">No</button>
+              </div>
+            </div>
+
+            <div class="mini-items-b">
+              <div class="mini-row-b">
+                <div class="dot-b done"></div>
+                <span class="mini-text-b">Me mueve la energía del grupo</span>
+              </div>
+              <div class="mini-row-b">
+                <div class="dot-b done"></div>
+                <span class="mini-text-b">Disfruto los espacios de encuentro</span>
+              </div>
+              <div class="mini-row-b">
+                <div class="dot-b"></div>
+                <span class="mini-text-b">La soledad me recarga con igual fuerza</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="progress-wrap-b">
+            <div class="progress-track-b">
+              <div class="progress-fill-b"></div>
+            </div>
+            <div class="progress-label-b">12 de 28 respondidas</div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="card-meta">
+        <div class="direction-label">Dirección B</div>
+        <div class="direction-name">Orgánica y Cálida</div>
+        <div class="direction-tagline">Cercanía · Sanación · Presencia</div>
+
+        <div class="meta-row">
+          <div class="meta-group">
+            <div class="meta-label">Tipografía</div>
+            <div class="font-names">
+              Lora<br>
+              Nunito
+            </div>
+          </div>
+          <div class="meta-group">
+            <div class="meta-label">Paleta</div>
+            <div class="swatches">
+              <div class="swatch" style="background:#f5efe6" title="Arena #f5efe6"></div>
+              <div class="swatch" style="background:#4a3728" title="Tierra #4a3728"></div>
+              <div class="swatch" style="background:#c4956a" title="Terracota #c4956a"></div>
+              <div class="swatch" style="background:#7a9e7e" title="Salvia #7a9e7e"></div>
+              <div class="swatch" style="background:#e8d5bc" title="Ocre #e8d5bc"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         CARD C — EDITORIAL / STRUCTURED
+    ══════════════════════════════════════════ -->
+    <div class="direction-card card-c">
+      <div class="mockup-frame">
+        <div class="mockup-c">
+
+          <div class="nav-c">
+            <span class="nav-logo-c">Heptagrama</span>
+            <span class="nav-meta-c">Etapa III — Juventud</span>
+            <span class="nav-accent">23 / 66</span>
+          </div>
+
+          <div class="body-c">
+            <div class="sidebar-c">
+              <div class="sidebar-label">Etapas</div>
+              <div class="stage-item-c">
+                <span class="stage-num">01</span> Niñez
+              </div>
+              <div class="stage-item-c">
+                <span class="stage-num">02</span> Adolescencia
+              </div>
+              <div class="stage-item-c active">
+                <span class="stage-num">03</span> Juventud
+              </div>
+              <div class="stage-item-c">
+                <span class="stage-num">04</span> Vejez
+              </div>
+            </div>
+
+            <div class="main-c">
+              <span class="question-num">Pregunta 23</span>
+              <p class="question-text-c">
+                "¿Tiendo a estructurar mis metas con plazos definidos?"
+              </p>
+              <div class="rule-c"></div>
+              <div class="options-c">
+                <button class="opt-c yes">Sí</button>
+                <button class="opt-c">No</button>
+              </div>
+              <div class="mini-rows-c">
+                <div class="mini-row-c">
+                  <span>Necesito orden para rendir</span>
+                  <span class="tag-c done">Sí</span>
+                </div>
+                <div class="mini-row-c">
+                  <span>Adapto mis planes con facilidad</span>
+                  <span class="tag-c">—</span>
+                </div>
+                <div class="mini-row-c">
+                  <span>Prefiero la estructura a la improvisación</span>
+                  <span class="tag-c done">Sí</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="card-meta">
+        <div class="direction-label">Dirección C</div>
+        <div class="direction-name">Editorial Estructurada</div>
+        <div class="direction-tagline">Rigor · Claridad · Autoridad</div>
+
+        <div class="meta-row">
+          <div class="meta-group">
+            <div class="meta-label">Tipografía</div>
+            <div class="font-names">
+              Libre Baskerville<br>
+              Space Grotesk
+            </div>
+          </div>
+          <div class="meta-group">
+            <div class="meta-label">Paleta</div>
+            <div class="swatches">
+              <div class="swatch" style="background:#f9f9f7" title="Papel #f9f9f7"></div>
+              <div class="swatch" style="background:#1a1a1a" title="Negro #1a1a1a"></div>
+              <div class="swatch" style="background:#d64f3c" title="Carmín #d64f3c"></div>
+              <div class="swatch" style="background:#888888" title="Grafito #888"></div>
+              <div class="swatch" style="background:#e0e0dc" title="Plomo #e0e0dc"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

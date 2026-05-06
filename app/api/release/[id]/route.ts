@@ -30,7 +30,8 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
       .eq('id', id)
       .single()
 
-    const client = submission?.client as { id: string; name: string; email: string | null } | null
+    const clientRaw = submission?.client
+    const client = (Array.isArray(clientRaw) ? clientRaw[0] : clientRaw) as { id: string; name: string; email: string | null } | null
 
     if (client?.email) {
       const { data: answerRows } = await supabase
