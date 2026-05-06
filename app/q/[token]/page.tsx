@@ -4,8 +4,10 @@ import { QuestionnairePage } from './questionnaire-page'
 import { ConfirmationPage } from './confirmation-page'
 import { ResultsReadyPage } from './results-ready-page'
 import { WelcomeClient } from './welcome-client'
+import { unstable_noStore as noStore } from 'next/cache'
 
 export default async function TokenPage({ params }: { params: Promise<{ token: string }> }) {
+  noStore()
   const { token } = await params
   const supabase = createServiceClient()
 
