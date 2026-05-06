@@ -1,10 +1,10 @@
-import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
+import { Toaster } from 'sonner'
 
-export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/admin/login')
-
-  return <>{children}</>
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <>
+      {children}
+      <Toaster position="bottom-right" />
+    </>
+  )
 }
