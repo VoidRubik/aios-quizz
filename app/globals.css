@@ -128,3 +128,142 @@
     @apply font-sans;
   }
 }
+
+/* ── Design system: A-typography + C-editorial ── */
+:root {
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+  --color-ink: #111111;
+  --color-paper: #fafaf8;
+  --color-rule: #d0d0cc;
+  --color-accent: #c0392b;
+  --color-accent-muted: #f5e6e4;
+  --color-muted: #666662;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--color-paper);
+  color: var(--color-ink);
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+/* ── Welcome / intake / login screens ── */
+.welcome-screen {
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  background: var(--color-paper);
+  padding: 2rem;
+}
+
+.welcome-card {
+  width: 100%;
+  max-width: 480px;
+  border: 1px solid var(--color-ink);
+  padding: 3rem;
+}
+
+.welcome-header {
+  border-bottom: 1px solid var(--color-ink);
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+}
+
+.welcome-logo {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.welcome-title {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 300;
+  margin: 0 0 0.75rem;
+  line-height: 1.2;
+}
+
+.welcome-subtitle {
+  font-size: 0.9rem;
+  color: var(--color-muted);
+  line-height: 1.65;
+  margin-bottom: 2rem;
+}
+
+.welcome-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.welcome-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.welcome-label-hint {
+  font-size: 0.7rem;
+  color: var(--color-rule);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.welcome-input {
+  border: 1px solid var(--color-ink);
+  padding: 0.75rem 1rem;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  background: transparent;
+  outline: none;
+  margin-bottom: 1rem;
+  color: var(--color-ink);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.welcome-input:focus {
+  border-color: var(--color-accent);
+}
+
+.welcome-button {
+  background: var(--color-ink);
+  color: var(--color-paper);
+  border: 1px solid var(--color-ink);
+  padding: 0.85rem 1.5rem;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  width: 100%;
+}
+
+.welcome-button:hover:not(:disabled) {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.welcome-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.welcome-error {
+  font-size: 0.8rem;
+  color: var(--color-accent);
+  margin: 0;
+}
