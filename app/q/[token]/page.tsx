@@ -19,7 +19,9 @@ export default async function TokenPage({ params }: { params: Promise<{ token: s
 
   if (!client) notFound()
 
-  const submission = (client.submissions as any[])?.[0]
+  const submission = Array.isArray(client.submissions)
+    ? client.submissions[0]
+    : client.submissions
   const status = submission?.status ?? 'not_started'
 
   if (status === 'released') {

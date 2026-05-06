@@ -25,7 +25,9 @@ export async function POST(req: Request) {
 
   await supabase.from('clients').update({ email }).eq('id', client.id)
 
-  const existing = (client.submissions as any[])?.[0]
+  const existing = Array.isArray(client.submissions)
+    ? client.submissions[0]
+    : client.submissions
 
   if (existing && existing.status !== 'not_started') {
     return NextResponse.json({ ok: true })
