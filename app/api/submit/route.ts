@@ -1,6 +1,12 @@
 import { createServiceClient } from '@/lib/supabase/service'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
+import { renderToBuffer } from '@react-pdf/renderer'
+import { ResultsNote } from '@/lib/pdf/results-note'
+import { computeResult } from '@/lib/heptagrama/calc'
+import type { AnswersMap, Stage, TypeSlug } from '@/lib/heptagrama/types'
+import { sendCartillaEmail } from '@/lib/email/send-cartilla'
+import React from 'react'
 
 const schema = z.object({ token: z.string() })
 
@@ -14,7 +20,7 @@ export async function POST(req: Request) {
 
   const { data: client } = await supabase
     .from('clients')
-    .select('id, submissions(id, status)')
+    .select('id, name, email, submissions(id, status)')
     .eq('token', token)
     .single()
 
@@ -24,7 +30,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Not in progress' }, { status: 400 })
   }
 
-  // Verify all traits have Juventud answers
   const { data: traits } = await supabase.from('traits').select('id')
   const { data: juventudAnswers } = await supabase
     .from('answers')
@@ -45,7 +50,6 @@ export async function POST(req: Request) {
   const { data: settings } = await supabase.from('settings').select('auto_release').single()
   const newStatus = settings?.auto_release ? 'released' : 'submitted'
 
-  // Find dominant type for Juventud to seed cartilla_override
   const { data: allAnswers } = await supabase
     .from('answers')
     .select('trait_id, value')
@@ -86,6 +90,53 @@ export async function POST(req: Request) {
     ...(newStatus === 'released' ? { released_at: new Date().toISOString() } : {}),
     cartilla_override: cartillaOverride,
   }).eq('id', submission.id)
+
+  if (newStatus === 'released' && client.email) {
+    try {
+      const { data: answerRows } = await supabase
+        .from('answers')
+        .select('trait_id, stage, value')
+        .eq('submission_id', submission.id)
+
+      const { data: typeRowsFull } = await supabase
+        .from('personality_types')
+        .select('id, slug, traits(id)')
+
+      const traitIdsByType: Record<TypeSlug, string[]> = {} as any
+      for (const t of typeRowsFull ?? []) {
+        traitIdsByType[t.slug as TypeSlug] = (t.traits as any[]).map(tr => tr.id)
+      }
+
+      const answers: AnswersMap = {}
+      for (const row of answerRows ?? []) {
+        if (!answers[row.trait_id]) answers[row.trait_id] = { ninez: null, adolescencia: null, juventud: null, vejez: null }
+        answers[row.trait_id][row.stage as Stage] = row.value ?? null
+      }
+
+      const result = computeResult(answers, traitIdsByType)
+      const { data: coach } = await supabase.from('coach').select('name, logo_url').single()
+
+      const pdfBuffer = await renderToBuffer(
+        React.createElement(ResultsNote, {
+          clientName: client.name,
+          date: new Date().toLocaleDateString('es'),
+          coachName: coach?.name ?? '',
+          logoUrl: coach?.logo_url ?? undefined,
+          result,
+          cartilla: cartillaOverride,
+          coachNote: '',
+        }) as any
+      )
+
+      await sendCartillaEmail({
+        toEmail: client.email,
+        toName: client.name,
+        pdfBuffer: Buffer.from(pdfBuffer),
+      })
+    } catch (err) {
+      console.error('Email send failed:', err)
+    }
+  }
 
   return NextResponse.json({ ok: true, status: newStatus })
 }
