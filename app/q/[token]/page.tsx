@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { QuestionnairePage } from './questionnaire-page'
 import { ConfirmationPage } from './confirmation-page'
 import { ResultsReadyPage } from './results-ready-page'
+import { WelcomeClient } from './welcome-client'
 
 export default async function TokenPage({ params }: { params: Promise<{ token: string }> }) {
   const { token } = await params
@@ -10,7 +11,7 @@ export default async function TokenPage({ params }: { params: Promise<{ token: s
 
   const { data: client } = await supabase
     .from('clients')
-    .select('id, name, submissions(id, status)')
+    .select('id, name, email, submissions(id, status)')
     .eq('token', token)
     .single()
 
@@ -27,7 +28,17 @@ export default async function TokenPage({ params }: { params: Promise<{ token: s
     return <ConfirmationPage clientName={client.name} />
   }
 
-  const answers = status === 'in_progress' && submission
+  if (status === 'not_started') {
+    return (
+      <WelcomeClient
+        token={token}
+        clientName={client.name}
+        initialEmail={client.email ?? null}
+      />
+    )
+  }
+
+  const answers = submission
     ? await loadAnswers(supabase, submission.id)
     : {}
 
