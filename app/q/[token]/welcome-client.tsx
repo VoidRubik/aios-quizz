@@ -28,7 +28,7 @@ export function WelcomeClient({ token, clientName, initialEmail }: Props) {
       setLoading(false)
       return
     }
-    router.refresh()
+    window.location.href = `/q/${token}`
   }
 
   return (
