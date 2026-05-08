@@ -21,10 +21,10 @@ export async function QuestionnairePage({ token, clientName, initialAnswers }: P
   }))
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b px-6 py-4">
-        <h1 className="font-semibold">Hola, {clientName}</h1>
-        <p className="text-sm text-muted-foreground">Responde con sinceridad sobre cada etapa de tu vida.</p>
+    <div className="questionnaire-shell">
+      <header className="questionnaire-header">
+        <h1>Hola, {clientName}</h1>
+        <p>Responde con sinceridad sobre cada etapa de tu vida.</p>
       </header>
       <WizardClient token={token} types={types} initialAnswers={initialAnswers} />
     </div>

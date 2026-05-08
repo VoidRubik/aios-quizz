@@ -1,7 +1,6 @@
 'use client'
 import { useState } from 'react'
 import { toast } from 'sonner'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 
@@ -13,12 +12,12 @@ const STATUS_LABELS: Record<string, string> = {
   released: 'Publicado',
 }
 
-const STATUS_VARIANTS: Record<string, 'default'|'secondary'|'outline'|'destructive'> = {
-  not_started: 'outline',
-  in_progress: 'secondary',
-  submitted: 'default',
-  reviewing: 'secondary',
-  released: 'default',
+const STATUS_BADGE_CLASS: Record<string, string> = {
+  not_started: 'status-badge status-badge--outline',
+  in_progress: 'status-badge status-badge--in-progress',
+  submitted: 'status-badge status-badge--default',
+  reviewing: 'status-badge status-badge--in-progress',
+  released: 'status-badge status-badge--released',
 }
 
 interface Client {
@@ -42,49 +41,53 @@ export function ClientsTable({ clients }: { clients: Client[] }) {
   }
 
   return (
-    <table className="w-full text-sm">
-      <thead>
-        <tr className="border-b text-muted-foreground">
-          <th className="text-left py-2">Nombre</th>
-          <th className="text-left py-2">Email</th>
-          <th className="text-left py-2">Estado</th>
-          <th className="text-left py-2">Fecha</th>
-          <th className="text-left py-2">Enlace</th>
-          <th />
-        </tr>
-      </thead>
-      <tbody>
-        {clients.map(client => {
-          const status = client.submissions?.[0]?.status ?? 'not_started'
-          const copied = copiedId === client.id
-          return (
-            <tr key={client.id} className="border-b hover:bg-muted/50">
-              <td className="py-3">{client.name}</td>
-              <td className="py-3 text-muted-foreground">{client.email ?? '—'}</td>
-              <td className="py-3">
-                <Badge variant={STATUS_VARIANTS[status]}>{STATUS_LABELS[status]}</Badge>
-              </td>
-              <td className="py-3 text-muted-foreground">
-                {new Date(client.created_at).toLocaleDateString('es')}
-              </td>
-              <td className="py-3">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => copyLink(client)}
-                >
-                  {copied ? '✓ Copiado' : 'Copiar enlace'}
-                </Button>
-              </td>
-              <td className="py-3">
-                <Link href={`/admin/clients/${client.id}`}>
-                  <Button size="sm" variant="ghost">Ver →</Button>
-                </Link>
-              </td>
-            </tr>
-          )
-        })}
-      </tbody>
-    </table>
+    <div className="clients-table-wrap">
+      <table className="clients-table">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Estado</th>
+            <th>Fecha</th>
+            <th>Enlace</th>
+            <th />
+          </tr>
+        </thead>
+        <tbody>
+          {clients.map(client => {
+            const status = client.submissions?.[0]?.status ?? 'not_started'
+            const copied = copiedId === client.id
+            return (
+              <tr key={client.id}>
+                <td>{client.name}</td>
+                <td className="muted">{client.email ?? '—'}</td>
+                <td>
+                  <span className={STATUS_BADGE_CLASS[status]}>
+                    {STATUS_LABELS[status]}
+                  </span>
+                </td>
+                <td className="muted">
+                  {new Date(client.created_at).toLocaleDateString('es')}
+                </td>
+                <td>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => copyLink(client)}
+                  >
+                    {copied ? '✓ Copiado' : 'Copiar enlace'}
+                  </Button>
+                </td>
+                <td>
+                  <Link href={`/admin/clients/${client.id}`}>
+                    <Button size="sm" variant="ghost">Ver →</Button>
+                  </Link>
+                </td>
+              </tr>
+            )
+          })}
+        </tbody>
+      </table>
+    </div>
   )
 }

@@ -67,10 +67,23 @@ export function Wizard({ token, types, initialAnswers, onSubmitted }: Props) {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-8">
-      <div className="flex justify-between text-sm text-muted-foreground">
-        <span>Paso {step + 1} de {types.length}</span>
-        <span>{currentType.name}</span>
+    <div className="questionnaire-body">
+      <div className="wizard-progress">
+        <div>
+          <div className="wizard-progress-meta">Paso {step + 1} de {types.length}</div>
+          <div className="wizard-progress-current">{currentType.name}</div>
+        </div>
+        <div className="wizard-dots" aria-hidden="true">
+          {types.map((_, i) => (
+            <span
+              key={i}
+              className={
+                'wizard-dot ' +
+                (i === step ? 'wizard-dot--current' : i < step ? 'wizard-dot--done' : '')
+              }
+            />
+          ))}
+        </div>
       </div>
 
       <TypeStep
@@ -80,7 +93,7 @@ export function Wizard({ token, types, initialAnswers, onSubmitted }: Props) {
         onChange={handleChange}
       />
 
-      <div className="flex justify-between pt-4">
+      <div className="wizard-footer">
         <Button variant="outline" onClick={() => setStep(s => s - 1)} disabled={step === 0}>
           Anterior
         </Button>
@@ -94,7 +107,7 @@ export function Wizard({ token, types, initialAnswers, onSubmitted }: Props) {
       </div>
 
       {isLastStep && !allJuventudAnswered && (
-        <p className="text-sm text-destructive text-center">
+        <p className="wizard-error">
           Completa todas las respuestas de Juventud antes de enviar.
         </p>
       )}
