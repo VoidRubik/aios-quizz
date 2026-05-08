@@ -14,7 +14,9 @@ export default async function ClientReviewPage({ params }: { params: Promise<{ i
 
   if (!client) notFound()
 
-  const submission = (client.submissions as any[])?.[0]
+  const submission = Array.isArray(client.submissions)
+    ? client.submissions[0]
+    : client.submissions
 
   const { data: typeRows } = await supabase
     .from('personality_types')

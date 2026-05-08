@@ -25,7 +25,9 @@ export async function POST(req: Request) {
     .single()
 
   if (!client) return NextResponse.json({ error: 'Not found' }, { status: 404 })
-  const submission = (client.submissions as any[])?.[0]
+  const submission = Array.isArray(client.submissions)
+    ? client.submissions[0]
+    : client.submissions
   if (!submission || submission.status !== 'in_progress') {
     return NextResponse.json({ error: 'Not in progress' }, { status: 400 })
   }

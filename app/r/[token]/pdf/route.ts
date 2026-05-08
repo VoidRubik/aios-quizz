@@ -18,7 +18,9 @@ export async function GET(req: Request, { params }: { params: Promise<{ token: s
 
   if (!client) return NextResponse.json({ error: 'Not found' }, { status: 404 })
 
-  const submission = (client.submissions as any[])?.[0]
+  const submission = Array.isArray(client.submissions)
+    ? client.submissions[0]
+    : client.submissions
   if (!submission || submission.status !== 'released') {
     return NextResponse.json({ error: 'Not released' }, { status: 403 })
   }

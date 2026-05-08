@@ -25,7 +25,9 @@ export async function POST(req: Request) {
 
   if (!client) return NextResponse.json({ error: 'Not found' }, { status: 404 })
 
-  let submission = (client.submissions as any[])?.[0]
+  let submission = Array.isArray(client.submissions)
+    ? client.submissions[0]
+    : client.submissions
   if (submission?.status === 'submitted' || submission?.status === 'released') {
     return NextResponse.json({ error: 'Locked' }, { status: 403 })
   }
