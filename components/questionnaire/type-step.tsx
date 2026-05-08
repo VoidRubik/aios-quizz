@@ -12,17 +12,19 @@ interface Props {
 
 export function TypeStep({ typeName, traits, answers, onChange }: Props) {
   return (
-    <div className="space-y-2">
-      <h2 className="text-xl font-semibold mb-4">{typeName}</h2>
-      {traits.map(trait => (
-        <TraitRow
-          key={trait.id}
-          traitId={trait.id}
-          text={trait.text}
-          answers={(answers[trait.id] ?? { ninez: null, adolescencia: null, juventud: null, vejez: null }) as Record<Stage, Answer>}
-          onChange={onChange}
-        />
-      ))}
+    <div>
+      <h2 className="type-step-title">{typeName}</h2>
+      <div className="space-y-3">
+        {traits.map(trait => (
+          <TraitRow
+            key={trait.id}
+            traitId={trait.id}
+            text={trait.text}
+            answers={(answers[trait.id] ?? { ninez: null, adolescencia: null, juventud: null, vejez: null }) as Record<Stage, Answer>}
+            onChange={onChange}
+          />
+        ))}
+      </div>
     </div>
   )
 }
