@@ -1,36 +1,33 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Heptagrama
 
-## Getting Started
+A database-backed assessment app for a psychological-coaching practice — it replaces an Excel-based questionnaire tool with a token-linked client flow and coach-reviewed result PDFs.
 
-First, run the development server:
+![Heptagrama](docs/screenshots/heptagram.png)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## What it does
+
+- **Coach admin panel** (`/admin`) — create clients, configure settings, review submitted questionnaires.
+- **Client questionnaire** (`/q/[token]`) — a client opens a private token link and answers the trait inventory across four life stages (Niñez, Adolescencia, Juventud, Vejez), with auto-save per answer.
+- **Scoring pipeline** — for each life stage independently: raw score per personality type (`Sí` count / trait total), normalized across the seven types, top-two types, a derived `carisma_index`, and an "Énfasis Genético" cluster.
+- **Results** (`/r/[token]`) — coach-reviewed output, exportable as a generated PDF (`@react-pdf/renderer`).
+
+### Domain model
+
+Seven personality types (Solitario, Sensitivo, Agudo, Estructurado, Energético, Expansivo, Carismático), each with a trait inventory; four life stages per trait; `Sí` / `No` answers feeding the pipeline above.
+
+## Stack
+
+Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS 4 · Supabase (Postgres + Auth) · deployed on Vercel · `@react-pdf/renderer` for result documents.
+
+## Run
+
+```
+npm install
+npm run dev        # → http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Needs a Supabase project — copy `.env.local.example` to `.env.local` and fill in the URL and keys. `npm run build` passes clean.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Status
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Built** — full build passes, all routes compile, the scoring pipeline and client flow are implemented. The hosted Supabase backend has not been re-verified recently; run against your own project.
