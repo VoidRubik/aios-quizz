@@ -30,4 +30,4 @@ Needs a Supabase project — copy `.env.local.example` to `.env.local` and fill 
 
 ## Status
 
-**Built** — full build passes, all routes compile, the scoring pipeline and client flow are implemented. The hosted Supabase backend has not been re-verified recently; run against your own project.
+Functional prototype. `npm run build` passes clean, all routes compile, the scoring pipeline and client flow are implemented. The Supabase project it was built against has since been deprovisioned, so running it end to end needs a fresh Supabase project and `.env.local` (see `.env.local.example`).
